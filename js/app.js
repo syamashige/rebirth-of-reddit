@@ -149,13 +149,13 @@ request("load", firstUrl, "GET", res => {
         // Create Title/Text for the Content
         let insertTitle = elemHelper("div", null, "insertTitle", target.data.children[i].data.title);
         inputBoxes.appendChild(insertTitle);
-        
-        let commentContainer = document.createElement('div');
-        commentContainer.className = "commentContainer";
+
+        // Create Wrapper for the Comment Section
+        let commentContainer = elemHelper("div", null, "commentContainer", null);
         inputBoxes.appendChild(commentContainer);
 
-        let commentBox = document.createElement('input');
-        commentBox.className = "commentHere";
+        // Create Comment Input Box
+        let commentBox = elemHelper("input", null, "commentHere", null);
         commentBox.value = "Leave a comment ...";
         commentContainer.appendChild(commentBox);
 
@@ -187,6 +187,7 @@ request("load", firstUrl, "GET", res => {
 }
     
 })
+
 
 let getMyBoards = document.getElementById("myBoards");
 getMyBoards.addEventListener("click", getHomePage);
