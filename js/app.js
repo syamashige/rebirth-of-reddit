@@ -29,16 +29,6 @@ const logo = elemHelper("img", "logo", null, null);
 logo.src = "./assets/logo.svg";
 headerContainer.appendChild(logo);
 
-// const header = document.createElement("img");
-// header.id = "header";
-// header.src = "./assets/header_bg.svg";
-// // header.style.display = "block";
-// // header.style.margin = "auto"
-// // header.style.position = "absolute"
-// document.body.appendChild(header)
-
-
-
 // Create Navigation Bar
 const navDiv = elemHelper("div", "navigation", null, null);
 headerContainer.appendChild(navDiv);
@@ -193,45 +183,101 @@ let getMyBoards = document.getElementById("myBoards");
 getMyBoards.addEventListener("click", getHomePage);
 
 function getHomePage() {
-    let removePrev = document.body;
-    let removeThis = document.getElementById("container");
-    removePrev.removeChild(removeThis);
-
-
-    let newContainer = document.createElement("div");
-    newContainer.id = "container";
-    document.body.appendChild(newContainer);
 
     request("load", firstUrl, "GET", res => {
-        const target = JSON.parse(res.currentTarget.response);
-        console.log("target", target);
-        console.log("target children length", (target.data.children).length)
-        for (let i = 0; i < (target.data.children).length; i++) {
-            // console.log("Is it looping?")
-            let inputBoxes = document.createElement('div');
-            inputBoxes.className = "input";
-            container.appendChild(inputBoxes);
+        let removePrev = document.body;
+        let removeThis = document.getElementById("container");
+        removePrev.removeChild(removeThis);
+    
+    
+        let newContainer = document.createElement("div");
+        newContainer.id = "container";
+        document.body.appendChild(newContainer);
+        
+    const target = JSON.parse(res.currentTarget.response);
+    console.log("target", target);
+    console.log("target children length", (target.data.children).length)
+    for (let i = 0; i < (target.data.children).length; i++) {
+        
+        // Create Input Boxes Wrapper
+        let inputBoxes = elemHelper("div", null, "input", null);
+        container.appendChild(inputBoxes);
 
-            let insertTitle = document.createElement('p');
-            insertTitle.className = "insertTitle";
-            insertTitle.innerHTML = target.data.children[i].data.title;
-            inputBoxes.appendChild(insertTitle);
+        // Create Wrapper for User Section of Input Boxes
+        let userContainer = elemHelper("div", null, "userContainer", null);
+        inputBoxes.appendChild(userContainer);
 
-            let insertImage = document.createElement('img');
-            insertImage.className = "insertUrl";
-            insertImage.src = target.data.children[i].data.thumbnail;
-            inputBoxes.appendChild(insertImage);
+        // Create User Profile Picture in User Section
+        let userImage = elemHelper("img", null, "userImg", null);
+        userImage.src = target.data.children[i].data.thumbnail;
+        userContainer.appendChild(userImage);
 
+        // Create User Name in User Section
+        let inputUser = elemHelper("div", null, "user", target.data.children[i].data.author);
+        userContainer.appendChild(inputUser);
+
+        // Create Content for Input Box 
+        let insertImage = elemHelper("img", null, "thumbnail", null);
+        insertImage.src = target.data.children[i].data.thumbnail;
+        inputBoxes.appendChild(insertImage);
+
+        // Create Wrapper for Interaction
+        let interactContainer = elemHelper("div", null, "interact", null);
+        inputBoxes.appendChild(interactContainer);
+
+        // Create Faux Like Button Option
+        let iLikeThat = elemHelper("img", null, "likeThat", null);
+        iLikeThat.src = "./assets/empty_heart.png";
+        interactContainer.appendChild(iLikeThat);
+
+        // Click Event Listener for the Faux Like Button 
+        // When the heart is clicked, it changes to red filled heart image
+        iLikeThat.addEventListener("click", fullHeart);
+
+        function fullHeart() {
+            iLikeThat.src = "./assets/red_heart.png";
+         }
+        
+        // Create Faux Comment Button Option
+        let leaveComment = elemHelper("img", null, "commentThat", null);
+        leaveComment.src = "./assets/comment_icon.png";
+        interactContainer.appendChild(leaveComment);
+
+        // Click Event Listener for Faux Comment Button 
+        // When clicked, show the text box to leave the comment
+        leaveComment.addEventListener("click", comment);
+
+        function comment() {
+            let showCommentBox = document.querySelectorAll(".commentHere")[0];
+            if (showCommentBox.classList.contains("show") === false) {
+                showCommentBox.classList.add("show");
+            } 
+            else {
+                showCommentBox.classList.remove("show");
+            }
         }
-    })
+
+        // Create Title/Text for the Content
+        let insertTitle = elemHelper("div", null, "insertTitle", target.data.children[i].data.title);
+        inputBoxes.appendChild(insertTitle);
+
+        // Create Wrapper for the Comment Section
+        let commentContainer = elemHelper("div", null, "commentContainer", null);
+        inputBoxes.appendChild(commentContainer);
+
+        // Create Comment Input Box
+        let commentBox = elemHelper("input", null, "commentHere", null);
+        commentBox.value = "Leave a comment ...";
+        commentContainer.appendChild(commentBox);
+    }   
+})
 }
 
 let randomButtonEvent = document.getElementById("random");
 randomButtonEvent.addEventListener("click", randomPage);
 
 function randomPage() {
-    // let removePrev = document.getElementsByTagName("body");
-    // removePrev.removeChild("container")
+
     request("load", randomUrl, "GET", res => {
         let removePrev = document.body;
         let removeThis = document.getElementById("container");
@@ -242,30 +288,83 @@ function randomPage() {
         newContainer.id = "container";
         document.body.appendChild(newContainer);
         
-        console.log("random nightmares")
-        console.log("hello world")
-        // homePage = null;
-        const target = JSON.parse(res.currentTarget.response);
-        console.log("target", target);
-        console.log("target children length", (target.data.children).length)
-        for (let i = 0; i < (target.data.children).length; i++) {
-            // console.log("Is it looping?")
-            let inputBoxes = document.createElement('div');
-            inputBoxes.className = "input";
-            container.appendChild(inputBoxes);
+    const target = JSON.parse(res.currentTarget.response);
+    console.log("target", target);
+    console.log("target children length", (target.data.children).length)
+    for (let i = 0; i < (target.data.children).length; i++) {
+        
+        // Create Input Boxes Wrapper
+        let inputBoxes = elemHelper("div", null, "input", null);
+        container.appendChild(inputBoxes);
 
-            let insertTitle = document.createElement('p');
-            insertTitle.className = "insertTitle";
-            insertTitle.innerHTML = target.data.children[i].data.title;
-            inputBoxes.appendChild(insertTitle);
+        // Create Wrapper for User Section of Input Boxes
+        let userContainer = elemHelper("div", null, "userContainer", null);
+        inputBoxes.appendChild(userContainer);
 
-            let insertImage = document.createElement('img');
-            insertImage.className = "insertUrl";
-            insertImage.src = target.data.children[i].data.thumbnail;
-            inputBoxes.appendChild(insertImage);
+        // Create User Profile Picture in User Section
+        let userImage = elemHelper("img", null, "userImg", null);
+        userImage.src = target.data.children[i].data.thumbnail;
+        userContainer.appendChild(userImage);
 
+        // Create User Name in User Section
+        let inputUser = elemHelper("div", null, "user", target.data.children[i].data.author);
+        userContainer.appendChild(inputUser);
+
+        // Create Content for Input Box 
+        let insertImage = elemHelper("img", null, "thumbnail", null);
+        insertImage.src = target.data.children[i].data.thumbnail;
+        inputBoxes.appendChild(insertImage);
+
+        // Create Wrapper for Interaction
+        let interactContainer = elemHelper("div", null, "interact", null);
+        inputBoxes.appendChild(interactContainer);
+
+        // Create Faux Like Button Option
+        let iLikeThat = elemHelper("img", null, "likeThat", null);
+        iLikeThat.src = "./assets/empty_heart.png";
+        interactContainer.appendChild(iLikeThat);
+
+        // Click Event Listener for the Faux Like Button 
+        // When the heart is clicked, it changes to red filled heart image
+        iLikeThat.addEventListener("click", fullHeart);
+
+        function fullHeart() {
+            iLikeThat.src = "./assets/red_heart.png";
+         }
+        
+        // Create Faux Comment Button Option
+        let leaveComment = elemHelper("img", null, "commentThat", null);
+        leaveComment.src = "./assets/comment_icon.png";
+        interactContainer.appendChild(leaveComment);
+
+        // Click Event Listener for Faux Comment Button 
+        // When clicked, show the text box to leave the comment
+        leaveComment.addEventListener("click", comment);
+
+        function comment() {
+            let showCommentBox = document.querySelectorAll(".commentHere")[0];
+            if (showCommentBox.classList.contains("show") === false) {
+                showCommentBox.classList.add("show");
+            } 
+            else {
+                showCommentBox.classList.remove("show");
+            }
         }
-    })
+
+        // Create Title/Text for the Content
+        let insertTitle = elemHelper("div", null, "insertTitle", target.data.children[i].data.title);
+        inputBoxes.appendChild(insertTitle);
+
+        // Create Wrapper for the Comment Section
+        let commentContainer = elemHelper("div", null, "commentContainer", null);
+        inputBoxes.appendChild(commentContainer);
+
+        // Create Comment Input Box
+        let commentBox = elemHelper("input", null, "commentHere", null);
+        commentBox.value = "Leave a comment ...";
+        commentContainer.appendChild(commentBox);
+    }   
+})
 }
 
 
